@@ -307,14 +307,14 @@ public partial class LdtkImporterPlugin : EditorImportPlugin
             error = _ldtkJson.Import(_ldtkJson, savePath, options, genFiles);
             if (error != Error.Ok)
             {
-                GD.PrintErr($" PreImport failed, error:{error}");
+                GD.PrintErr($" Import failed, error:{error}");
                 return error;
             }
 
             error = _ldtkJson.PostImport(_ldtkJson, savePath, options, genFiles);
             if (error != Error.Ok)
             {
-                GD.PrintErr($" PreImport failed, error:{error}");
+                GD.PrintErr($" PostImport failed, error:{error}");
                 return error;
             }
 

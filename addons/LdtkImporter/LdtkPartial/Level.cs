@@ -123,18 +123,18 @@ public partial class Level : IImporter, IJsonOnDeserialized
     public Error PostImport(LdtkJson ldtkJson, string savePath, Dictionary options, Array<string> genFiles)
     {
         GD.Print($"  save level scene:{ScenePath}");
-
-        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionLevelPostProcessor);
-        if (postProcessor.Length != 0)
-        {
-            var processor = ResourceLoader.Load<AbstractPostProcessor>(postProcessor);
-            Root = processor.PostProcess(ldtkJson, options, Root);
-        }
         
         foreach (var layerInstance in LayerInstances.Reverse())
         {
             Root.AddChild(layerInstance.Root);
             layerInstance.Root.SetOwnerRecursively(Root);
+        }
+        
+        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionLevelPostProcessor);
+        if (postProcessor.Length != 0)
+        {
+            var processor = ResourceLoader.Load<AbstractPostProcessor>(postProcessor);
+            Root = processor.PostProcess(ldtkJson, options, Root);
         }
 
         var packedScene = new PackedScene();
