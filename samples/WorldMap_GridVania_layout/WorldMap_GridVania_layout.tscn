@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=22 format=3 uid="uid://bu3bk6cpallal"]
 
 [ext_resource type="PackedScene" uid="uid://db7yvry4bhvit" path="res://samples/WorldMap_GridVania_layout/Level/Entrance.tscn" id="1_tiwof"]
 [ext_resource type="PackedScene" uid="uid://cn7khn2dl35ma" path="res://samples/WorldMap_GridVania_layout/Level/Cross_roads.tscn" id="2_jooxn"]

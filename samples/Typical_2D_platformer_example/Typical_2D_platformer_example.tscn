@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://bhc5hojo4wqqn"]
 
 [ext_resource type="PackedScene" uid="uid://o0p78l0jxwcm" path="res://samples/Typical_2D_platformer_example/Level/Your_typical_2D_platformer.tscn" id="1_biv2y"]
 [ext_resource type="PackedScene" uid="uid://dkue44rbg7vna" path="res://samples/Typical_2D_platformer_example/Level/Top.tscn" id="2_mvjg6"]

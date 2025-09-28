@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://cxebgpomg1hv3"]
 
 [ext_resource type="PackedScene" uid="uid://biwt0chc25muj" path="res://samples/AutoLayers_2_stamps/Level/Stamps.tscn" id="1_nrajd"]
 

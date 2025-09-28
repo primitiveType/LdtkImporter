@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://b1mx4xw68bicw"]
 
 [ext_resource type="PackedScene" uid="uid://dgbfu5v2q7rld" path="res://samples/AutoLayers_6_OptionalRules/Level/Green_hills.tscn" id="1_a0idd"]
 [ext_resource type="PackedScene" uid="uid://cb7vhw42i0o7d" path="res://samples/AutoLayers_6_OptionalRules/Level/Frozen_caves.tscn" id="2_3vwd7"]

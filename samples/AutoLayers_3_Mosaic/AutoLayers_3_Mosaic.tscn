@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://csqe6jms27emy"]
 
 [ext_resource type="PackedScene" uid="uid://dtkeubms77sfw" path="res://samples/AutoLayers_3_Mosaic/Level/Mosaic_demo.tscn" id="1_2m7tw"]
 

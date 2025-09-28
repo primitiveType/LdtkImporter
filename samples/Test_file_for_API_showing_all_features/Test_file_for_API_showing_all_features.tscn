@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://cpd372es2qqy8"]
 
 [ext_resource type="PackedScene" uid="uid://b4rgrsdax55j2" path="res://samples/Test_file_for_API_showing_all_features/Level/Everything.tscn" id="1_bii6j"]
 [ext_resource type="PackedScene" uid="uid://ds8vlslfv43e6" path="res://samples/Test_file_for_API_showing_all_features/Level/Autolayer.tscn" id="2_gpv8o"]
