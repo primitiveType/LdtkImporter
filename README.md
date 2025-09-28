@@ -1,141 +1,140 @@
 ﻿# Godot LDtk C# Importer
 
-Godot 4 C# [LDtk](https://ldtk.io/) 导入插件
+Godot 4 C# [LDtk](https://ldtk.io/) Import Plugin
 
 ![](https://img.shields.io/badge/Godot%20.NET-4.2%2B-%20?logo=godotengine&color=%23478CBF) ![](https://img.shields.io/badge/LDtk%201.4.1-%20?color=%23FFCC00)
 
-> ⚠️ 目前该插件仍处于开发阶段，许多特性还处于调整中，请勿将本插件应用于生产环境！在使用本插件前，请确保已经对项目文件进行备份！
+> ⚠️ This plugin is still in development, many features are still being adjusted. Do not use this plugin in production environments! Please make sure to back up your project files before using it!
 
-# 📖 安装
+# 📖 Installation
 
-1. 使用C#版Godot 4.2+
-2. 将`addons\LdtkImporter`目录放到项目的`addons`目录下
-3. 通过 `Project > Project Settings > Plugins`开启本插件
-4. 此时`.ldtk`文件可以被Godot识别，并且会自动导入，并生成对应的`.tscn`场景资源和`.tres`Tileset资源
+1. Use Godot 4.2+ with C#
+2. Place the `addons\LdtkImporter` directory inside the project’s `addons` folder
+3. Enable the plugin via `Project > Project Settings > Plugins`
+4. `.ldtk` files can now be recognized by Godot, automatically imported, and corresponding `.tscn` scene resources and `.tres` Tileset resources will be generated
 
-# ✨ 特性
+# ✨ Features
 
 ## 🌏 World
 
-- [x]`.ldtk`文件导入后生成同名的`.tscn`场景，内部包含所有的`关卡`节点 ⬇️
+- [x] After importing `.ldtk` files, a `.tscn` scene with the same name will be generated, containing all `Level` nodes ⬇️
 
 ![](img/World.png)
 
 
 ## 🏔️ Level
 
-- [x] LDTK`Level`导入后，生成同名的`关卡`场景 ⬇️
-- [x] `关卡`场景独立导出为`.tscn`文件
+- [x] LDTK `Level` is imported as a `Level` scene with the same name ⬇️
+- [x] `Level` scenes are exported independently as `.tscn` files
 
 ![](img/Level.png)
 
 
 ## 📄 Layer
-- [x] `AutoLayer`、`IntGrid`类型Layer生成为Godot TileMap，`Entity`类型Layer生成为Godot Node2D
-- [x] 支持将 `IntGrid` 作为子节点生成 ⬇️
+- [x] `AutoLayer` and `IntGrid` Layers are generated as Godot TileMaps, `Entity` Layers are generated as Godot Node2D
+- [x] Support generating `IntGrid` as child nodes ⬇️
 
 ![](img/LayerIntGrid.gif)
 
-- [x] 支持同一个`Layer`下多个Tile叠加
+- [x] Support stacking multiple tiles under the same `Layer`
 
 
 ## 🧱 Tilesets
-- [x] 为每个 LDTK Tilesets
-  生成 [TileSetAtlasSource](https://docs.godotengine.org/en/stable/classes/class_tilesetatlassource.html#class-tilesetatlassource)
-  样式的 Godot Tileset
-- [x] 支持 [Tile](https://ldtk.io/json/#ldtk-Tile;f) X轴/Y轴翻转，并为其生成专门的 `AlternativeTile`
+- [x] For each LDTK Tileset, generate a Godot Tileset in [TileSetAtlasSource](https://docs.godotengine.org/en/stable/classes/class_tilesetatlassource.html#class-tilesetatlassource) style
+- [x] Support [Tile](https://ldtk.io/json/#ldtk-Tile;f) flipping on X/Y axes, and generate corresponding `AlternativeTile`
 
 
 ## 🐸 Entity
-- [x] 为每个Entity生成一个
+- [x] Generate one for each Entity
 
 
-# 🚩 导入选项
-当在Godot的`FileSystem`选中一个`.ldtk`文件时，可以看到如下图所示的导入选项： ⬇️
+# 🚩 Import Options
+When selecting an `.ldtk` file in Godot’s `FileSystem`, the following import options are available ⬇️
 
 ![](img/ImportOptions.png)
 
 
 
 * General
-    * Prefix: 该前缀表示当执行导入时，生成的 `Node2D`、`TileMap`等节点的名称前缀（例如：`LDTK_World_Level_0`）以及导入的元数据的名称前缀
+    * Prefix: The prefix applied to generated nodes (`Node2D`, `TileMap`, etc.) and metadata names during import (e.g. `LDTK_World_Level_0`)
 * World
-    * Post Processor: 导入后置处理器，可以通过后置处理器对导入后的节点进行自定义处理
-    * World Scenes: 表示要生成的世界场景的文件名称
+    * Post Processor: Import post-processor, allows custom handling of imported nodes
+    * World Scenes: Names of world scene files to generate
 * Tileset
-    * Add Tileset Definition to Meta: 将所有 [LDTK Tileset definition](https://ldtk.io/json/#ldtk-TilesetDefJson)数据作为元数据存储到Godot tileset中，其中元数据的key为：`${Prefix}_tilesetDefinition`，例如：`LDTK_tilesetDefinition`
-    * Resources: 根据LDTK中Tilesets的不同，插件自动生成对应的配置
+    * Add Tileset Definition to Meta: Store all [LDTK Tileset definition](https://ldtk.io/json/#ldtk-TilesetDefJson) data as metadata in the Godot tileset, under the key `${Prefix}_tilesetDefinition` (e.g. `LDTK_tilesetDefinition`)
+    * Resources: Plugin automatically generates configuration for different LDTK Tilesets
 * Entity
-    * Post Processor: 导入后置处理器，可以通过后置处理器对导入后的节点进行自定义处理
-    * Add Entity Definition to Meta: 将[LDTK Entity Definition](https://ldtk.io/json/#ldtk-EntityDefJson)数据作为元数据存储到导入后的Entity Scene以及节点中，其中元数据的key为：`${Prefix}
-      _entityDefinition`，例如：`LDTK_entityDefinition`
-    * Add Entity Instance to Meta: 将[LDTK Entity Instance](https://ldtk.io/json/#ldtk-EntityInstanceJson)数据作为元数据存储到导入后的Entity节点中，其中元数据的key为：`${Prefix}_entityInstance`，例如：`LDTK_entityInstance`
-    * Scenes: 根据LDTK中Entity的数量，插件自动生成对于的配置
+    * Post Processor: Import post-processor, allows custom handling of imported nodes
+    * Add Entity Definition to Meta: Store [LDTK Entity Definition](https://ldtk.io/json/#ldtk-EntityDefJson) data as metadata in imported Entity Scenes and nodes, under the key `${Prefix}_entityDefinition` (e.g. `LDTK_entityDefinition`)
+    * Add Entity Instance to Meta: Store [LDTK Entity Instance](https://ldtk.io/json/#ldtk-EntityInstanceJson) data as metadata in imported Entity nodes, under the key `${Prefix}_entityInstance` (e.g. `LDTK_entityInstance`)
+    * Scenes: Plugin automatically generates configuration based on the number of Entities in LDTK
 * Level
-    * Post Processor: 导入后置处理器，可以通过后置处理器对导入后的节点进行自定义处理
-    * Add Level to Meta: 将[LDTK Level](https://ldtk.io/json/#ldtk-LevelJson)数据作为元数据存储到导入后的Level节点中，其中元数据的key为：`${Prefix}_levelInstance`，例如：`LDTK_levelInstance`
-    * Add Layer Instance to Meta: 将[LDTK Layer Instance](https://ldtk.io/json/#ldtk-LayerInstanceJson)数据作为元数据存储到导入后的Layer节点中，其中其中元数据的key为：`${Prefix}_layerInstance`，例如：`LDTK_layerInstance`
-    * Add Layer Definition to Meta: 将[LDTK Layer Definition](https://ldtk.io/json/#ldtk-LayerDefJson)数据作为元数据存储到导入后的Layer节点中，其中其中元数据的key为：`${Prefix}_layerDefinition`，例如：`LDTK_layerDefinition`
-    * Import Int Grid: 是否导入`IntGrid`，效果参考[Layer](#-layer)中动图展示
-    * Scenes: 根据LDTK中Level的不同，插件自动生成对应的配置
+    * Post Processor: Import post-processor, allows custom handling of imported nodes
+    * Add Level to Meta: Store [LDTK Level](https://ldtk.io/json/#ldtk-LevelJson) data as metadata in imported Level nodes, under the key `${Prefix}_levelInstance` (e.g. `LDTK_levelInstance`)
+    * Add Layer Instance to Meta: Store [LDTK Layer Instance](https://ldtk.io/json/#ldtk-LayerInstanceJson) data as metadata in imported Layer nodes, under the key `${Prefix}_layerInstance` (e.g. `LDTK_layerInstance`)
+    * Add Layer Definition to Meta: Store [LDTK Layer Definition](https://ldtk.io/json/#ldtk-LayerDefJson) data as metadata in imported Layer nodes, under the key `${Prefix}_layerDefinition` (e.g. `LDTK_layerDefinition`)
+    * Import Int Grid: Whether to import `IntGrid`, see the animation under [Layer](#-layer) for effect
+    * Scenes: Plugin automatically generates configuration based on different LDTK Levels
 
 # ❓FAQ
-## LDTK支持在同一个Layer内的同一个位置堆叠多个[tile instance](https://ldtk.io/json/#ldtk-LayerInstanceJson;autoLayerTiles)，当导入到Godot时，是如何处理的？
-Godot TileMap支持创建多个 [Layer](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html#creating-tilemap-layers)
-，在导入时，插件会算出当前Layer的最大堆叠数量并在TileMap中提前将这些Layer创建出来，同时还会更新每个 [tile instance](https://ldtk.io/json/#ldtk-Tile) 在TileMap中的Layer图层索引。在真正执行导入时，已经就知道每个LDTK tile 
-instance归属于哪个TileMap Layer。一句话总结：通过Godot TileMap支持多Layer的特性解决堆叠问题。
+## LDTK supports stacking multiple [tile instances](https://ldtk.io/json/#ldtk-LayerInstanceJson;autoLayerTiles) in the same position within a Layer. How is this handled when imported into Godot?
+Godot TileMap supports creating multiple [Layers](https://docs.godotengine.org/en/stable/tutorials/2d/using_tilemaps.html#creating-tilemap-layers).  
+During import, the plugin calculates the maximum stack depth for the current Layer and pre-creates those Layers in the TileMap, while also updating each [tile instance](https://ldtk.io/json/#ldtk-Tile) with its correct TileMap Layer index. By the time import runs, the plugin already knows which TileMap Layer each LDTK tile instance belongs to.  
+In short: stacking is solved by leveraging Godot TileMap’s multi-Layer support.
 
-## 如果使用该插件作为LDTK和Godot的桥梁，那么工作流应该是怎样的？
-本插件作者一直在思考该问题，且还没要找到完美的解决方案。在LDTK和Godot结合的工作流中，LDTK的主要作用地图编辑器，然而并不能在LDTK中完成所有的地图编辑工作，例如需要为TileSet
-配置物理碰撞、导航时，也有可能在导入后对`tscn`场景进行编辑修改。这导致了一个核心矛盾点的产生：`如何解决重复导入而不影响在Godot中所做修改。`，目前有一个初步想法：
-1. 不支持重复导入，每次导入都覆盖原来的资源（Tileset、Scene）
-2. 支持重复导入
-   1. 在导入时，假如原资源（Tileset、Scene等）已经存在，在原数据的基础上修改
-   2. 通过前缀名区分节点是`用户节点`还是`LDTK节点`，也用来区分是`用户元数据`还是`LDTK元数据`
+## If this plugin is used as a bridge between LDTK and Godot, what should the workflow look like?
+The author has been considering this, but has not found a perfect solution yet. In an LDTK-Godot workflow, LDTK serves mainly as a map editor, but not all editing tasks can be done in LDTK. For example, configuring physics collisions or navigation in TileSets, or editing `.tscn` scenes after import.  
+This leads to a core conflict: **How to handle re-imports without affecting modifications made in Godot?**
 
-目前插件选用的是方案1的思路，如果有更好的思路，欢迎一起探讨！
+Possible solutions:
+1. No re-import support: each import overwrites existing resources (Tileset, Scene)
+2. Support re-imports
+    1. If resources already exist, modify them based on the original data
+    2. Use prefixes to distinguish between `User` nodes and `LDTK` nodes, and between `User` metadata and `LDTK` metadata
 
-## 如果需要扩展`导入后置处理器`，要如何操作？
-1. 首先需要实现[AbstractPostProcessor](addons/LdtkImporter/PostProcessor/AbstractPostProcessor.cs)，类似如下所示：
+Currently, the plugin uses solution **1**. If you have better ideas, feel free to discuss!
+
+## How to extend `Import Post Processors`?
+1. Implement [AbstractPostProcessor](addons/LdtkImporter/PostProcessor/AbstractPostProcessor.cs), for example:
     ```csharp
-    [Tool] //1. 必不可少
-    [GlobalClass] //2. 必不可少
-    [PostProcessor(ProcessorType.World)] //3. 本后置处理器的类型，可以进行组合，例如：[PostProcessor(ProcessorType.World | ProcessorType.Level)] 
+    [Tool] //1. Required
+    [GlobalClass] //2. Required
+    [PostProcessor(ProcessorType.World)] //3. The processor type, can be combined, e.g. [PostProcessor(ProcessorType.World | ProcessorType.Level)] 
     public partial class MyWorldPostProcessor : AbstractPostProcessor
     {
         public override Node2D PostProcess(LdtkJson ldtkJson, Dictionary options, Node2D baseNode)
         {
-            //对baseNode进行处理，可以仍然返回baseNode，也可以返回一个全新的Node2D或其子类
+            // Process baseNode, can return baseNode, or a completely new Node2D or subclass
             return baseNode;
         }
     }
     ```
-2. 需要在`FileSystem`中新建一个`MyWorldPostProcessor`类型的资源，并保存扩展名为：`.tres`，该后置处理器会自动添加到`导入选项`中
+2. Create a new resource of type `MyWorldPostProcessor` in `FileSystem`, save with the extension `.tres`. This post-processor will automatically be added to `Import Options`.
 
 # 💣 TODO
 
-- [ ] 运行时
-  - [ ] 支持运行动态修改`IntGrid`，并根据 [LDTK Auto-layer rule definition](https://ldtk.io/json/#ldtk-AutoRuleDef) 实时更新并渲染受影响的`IntGrid`和`AutoLayer`
+- [ ] Runtime
+    - [ ] Support runtime dynamic modification of `IntGrid`, with real-time updates and rendering of affected `IntGrid` and `AutoLayer` based on [LDTK Auto-layer rule definition](https://ldtk.io/json/#ldtk-AutoRuleDef)
 - [ ] World
-  - [x] 导入后处理脚本支持
-  - [x] LDTK 默认`Level`背景色支持
-  - [ ] LDTK [Multi-worlds](https://github.com/deepnight/ldtk/issues/231) 支持
+    - [x] Support import post-process scripts
+    - [x] Support LDTK default `Level` background color
+    - [ ] Support LDTK [Multi-worlds](https://github.com/deepnight/ldtk/issues/231)
 - [ ] Level
-  - [x] 支持`Level`背景色和背景图的导入
-  - [x] LDTK Level fields支持，元数据名称为：$"{prefix}_fieldInstances"
-  - [x] `Level` 导入后处理脚本支持
-  - [ ] 支持Level配置开关：是否生成独立的Level场景
+    - [x] Support importing `Level` background color and images
+    - [x] Support LDTK Level fields, metadata name: `$"{prefix}_fieldInstances"`
+    - [x] Support `Level` import post-process scripts
+    - [ ] Add Level configuration option: whether to generate independent Level scenes
 - [ ] Entity
-  - [ ] Entity视觉显示支持（`Sprite2D`）
-  - [ ] `Entity`导入后处理脚本支持
-  - [ ] Enum支持
-- [ ] 文档
-  - [x] 增加`后置处理器`扩展说明
+    - [ ] Support Entity visual display (`Sprite2D`)
+    - [ ] Support `Entity` import post-process scripts
+    - [ ] Enum support
+- [ ] Documentation
+    - [x] Add explanation for extending `Post Processors`
 
-# 🐞 已知BUG
-- [ ] 每次重新导入后，需要重新`Reload Current Project`或重新打开Godot后，导入的`.tscn`才会生效
-- [ ] 每次重新导出时，导出的`tscn`文件都有变化（主要是Level场景的id发生变化）
-- [x] 当`IntGrid`不包含rules时，生成的TileMap节点中没有包含TileSet，并且也没有正确设置tile
-- [x] 官方示例：Typical_TopDown_example.ldtk，导入后，某些Tile会缺失
-- [x] 目前导入后，没有为Level设置背景色
-- [x] 打开某些导入后的场景和Tileset后，会导致Godot闪退（例如：Typical_TopDown_example.ldtk）
+# 🐞 Known Bugs
+- [ ] After each re-import, you need to `Reload Current Project` or restart Godot for imported `.tscn` to take effect
+- [ ] Every re-exported `.tscn` file changes (mainly due to Level scene IDs changing)
+- [x] If `IntGrid` does not contain rules, generated TileMap nodes lack TileSet and tiles are not set correctly
+- [x] Official example: Typical_TopDown_example.ldtk — some tiles are missing after import
+- [x] No background color is set for Levels after import
+- [x] Opening certain imported scenes and Tilesets causes Godot to crash (e.g. Typical_TopDown_example.ldtk)
