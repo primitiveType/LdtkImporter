@@ -22,9 +22,9 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
     private static readonly System.Collections.Generic.Dictionary<string, Func<Node2D>> TypeMap = new()
     {
-        { nameof(TypeEnum.IntGrid), () => new TileMap() },
-        { nameof(TypeEnum.AutoLayer), () => new TileMap() },
-        { nameof(TypeEnum.Tiles), () => new TileMap() },
+        { nameof(TypeEnum.IntGrid), () => new TileMapLayer() },
+        { nameof(TypeEnum.AutoLayer), () => new TileMapLayer() },
+        { nameof(TypeEnum.Tiles), () => new TileMapLayer() },
         { nameof(TypeEnum.Entities), () => new Node2D() },
     };
 
@@ -44,11 +44,10 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
         Root.Visible = Visible;
         Root.Modulate = new Color(1, 1, 1, (float)Opacity);
 
-        var tileMap = Root as TileMap;
+        var tileMap = Root as TileMapLayer;
         var tilesetDefinition = ldtkJson.Defs.Tilesets.FirstOrDefault(definition => definition.Uid == TilesetDefUid);
         if (tileMap != null)
         {
-            tileMap.RemoveLayer(tileMap.GetLayersCount() - 1);
             tileMap.TileSet = tilesetDefinition?.TileSet;
         }
 
@@ -167,16 +166,16 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
     private Error ImportTile(LdtkJson ldtkJson, Dictionary options)
     {
-        var tileMap = (TileMap)Root;
+        var tileMap = (TileMapLayer)Root;
         var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
         var layerDefinition = ldtkJson.Defs.Layers.FirstOrDefault(definition => definition.Uid == LayerDefUid);
         var tilesetDefinition = ldtkJson.Defs.Tilesets.FirstOrDefault(definition => definition.Uid == TilesetDefUid);
 
         var layerNamePrefix = $"{prefix}_{layerDefinition!.Identifier}";
-        for (var i = 0; i < MaxTileStackCount; i++)
-        {
-            tileMap.EnsureLayerExist($"{layerNamePrefix}_{i}");
-        }
+        // for (var i = 0; i < MaxTileStackCount; i++)
+        // {
+        //     tileMap.EnsureLayerExist($"{layerNamePrefix}_{i}");
+        // }
 
         tileMap.TileSet = tilesetDefinition?.TileSet;
 
@@ -189,8 +188,8 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
             var atlasCoords = tileInstance.T.AtlasCoords(source);
             var alternativeId = (int)tileInstance.AlternativeIdFlags;
 
-            tileMap.SetCell(tileInstance.Layer, coords, (int)sourceId, atlasCoords, alternativeId);
-            var cellTileData = tileMap.GetCellTileData(tileInstance.Layer, coords, alternativeId != 0);
+            tileMap.SetCell(coords, (int)sourceId, atlasCoords, alternativeId);
+            var cellTileData = tileMap.GetCellTileData(coords);
             if (cellTileData == null)
             {
                 GD.PrintErr(
@@ -220,7 +219,7 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
                 return Error.Ok;
             }
 
-            var tileMap = new TileMap();
+            var tileMap = new TileMapLayer();
             tileMap.Name = $"{prefix}_{Type}";
 
             UpdateTileMap(ldtkJson, options, tileMap);
@@ -229,14 +228,14 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
         }
         else
         {
-            var tileMap = (TileMap)Root;
+            var tileMap = (TileMapLayer)Root;
             UpdateTileMap(ldtkJson, options, tileMap);
         }
 
         return Error.Ok;
     }
 
-    private void UpdateTileMap(LdtkJson ldtkJson, Dictionary options, TileMap tileMap)
+    private void UpdateTileMap(LdtkJson ldtkJson, Dictionary options, TileMapLayer tileMap)
     {
         var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
         var layerDefinition = ldtkJson.Defs.Layers.FirstOrDefault(definition => definition.Uid == LayerDefUid);
@@ -275,10 +274,10 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
             tileData.SetCustomDataByLayerId(0, Json.ParseString(JsonSerializer.Serialize(instance)));
         }
 
-        var layer = tileMap.EnsureLayerExist($"{prefix}_{layerDefinition!.Identifier}");
+        // var layer = tileMap.EnsureLayerExist($"{prefix}_{layerDefinition!.Identifier}");
         tileMap.TileSet = tileSet;
-        tileMap.SetLayerModulate(layer, new Color(1, 1, 1, (float)Opacity));
-        tileMap.SetLayerEnabled(layer, Visible);
+        tileMap.Enabled = Visible;
+        tileMap.Modulate = new Color(1, 1, 1, (float)Opacity);
 
         for (var index = 0; index < IntGridCsv.Length; index++)
         {
@@ -287,7 +286,7 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
             var coords = new Vector2I(Mathf.FloorToInt(index % CWid), Mathf.FloorToInt(index / (float)CWid));
             var atlasCoords = (IntGridCsv[index] - 1).AtlasCoords(source);
-            tileMap.SetCell(layer, coords, (int)layerDefinition.Uid, atlasCoords);
+            tileMap.SetCell(coords, (int)layerDefinition.Uid, atlasCoords);
         }
     }
 
