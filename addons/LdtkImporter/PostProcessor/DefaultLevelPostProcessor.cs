@@ -21,6 +21,7 @@ public partial class DefaultLevelPostProcessor : AbstractPostProcessor
         bgColorNode.Name = $"{prefix}_{nameof(level.BgColor)}";
         bgColorNode.Color = Color.FromString(level.BgColor, Colors.Gray);
         bgColorNode.Size = new Vector2(level.PxWid, level.PxHei);
+        bgColorNode.MouseFilter = Control.MouseFilterEnum.Ignore;
 
         baseNode.AddChild(bgColorNode);
         baseNode.MoveChild(bgColorNode, 0);
