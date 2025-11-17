@@ -18,6 +18,7 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 {
     [JsonIgnore] public string JsonString { get; set; }
     [JsonIgnore] public Node2D Root { get; set; }
+    [JsonIgnore] private List<TileMapLayer> Layers { get; } = new();
     [JsonIgnore] public int MaxTileStackCount { get; set; } = 1;
 
     private static readonly System.Collections.Generic.Dictionary<string, Func<Node2D>> TypeMap = new()
@@ -38,20 +39,30 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
         var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
 
-        Root = func.Invoke();
+        Root = new Node2D();
         Root.Name = $"{prefix}_{Identifier}";
         Root.Position = new Vector2(PxTotalOffsetX, PxTotalOffsetY);
         Root.Visible = Visible;
         Root.Modulate = new Color(1, 1, 1, (float)Opacity);
 
-        var tileMap = Root as TileMapLayer;
-        var tilesetDefinition = ldtkJson.Defs.Tilesets.FirstOrDefault(definition => definition.Uid == TilesetDefUid);
-        if (tileMap != null)
+        CalculateTileStack();
+
+        for (int i = 0; i < MaxTileStackCount; i++)
         {
-            tileMap.TileSet = tilesetDefinition?.TileSet;
+            var layer = func.Invoke();
+            var tileMapLayer = layer as TileMapLayer;
+            var tilesetDefinition =
+                ldtkJson.Defs.Tilesets.FirstOrDefault(definition => definition.Uid == TilesetDefUid);
+            if (tileMapLayer != null)
+            {
+                tileMapLayer.TileSet = tilesetDefinition?.TileSet;
+                Layers.Add(tileMapLayer);
+                
+            }
+
+            Root.AddChild(layer);
         }
 
-        CalculateTileStack();
 
         return Error.Ok;
     }
@@ -166,30 +177,20 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
     private Error ImportTile(LdtkJson ldtkJson, Dictionary options)
     {
-        var tileMap = (TileMapLayer)Root;
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
-        var layerDefinition = ldtkJson.Defs.Layers.FirstOrDefault(definition => definition.Uid == LayerDefUid);
         var tilesetDefinition = ldtkJson.Defs.Tilesets.FirstOrDefault(definition => definition.Uid == TilesetDefUid);
-
-        var layerNamePrefix = $"{prefix}_{layerDefinition!.Identifier}";
-        // for (var i = 0; i < MaxTileStackCount; i++)
-        // {
-        //     tileMap.EnsureLayerExist($"{layerNamePrefix}_{i}");
-        // }
-
-        tileMap.TileSet = tilesetDefinition?.TileSet;
+        Layers.ForEach(layer => layer.TileSet = tilesetDefinition?.TileSet);
 
         var tileInstances = Type == nameof(TypeEnum.Tiles) ? GridTiles : AutoLayerTiles;
         var sourceId = tilesetDefinition?.Uid ?? 0;
-        var source = (TileSetAtlasSource)tileMap.TileSet?.GetSource((int)sourceId);
+        var source = (TileSetAtlasSource)Layers.FirstOrDefault()?.TileSet?.GetSource((int)sourceId);
         foreach (var tileInstance in tileInstances)
         {
             var coords = ToCoords(tileInstance);
             var atlasCoords = tileInstance.T.AtlasCoords(source);
             var alternativeId = (int)tileInstance.AlternativeIdFlags;
 
-            tileMap.SetCell(coords, (int)sourceId, atlasCoords, alternativeId);
-            var cellTileData = tileMap.GetCellTileData(coords);
+            Layers[tileInstance.Layer].SetCell(coords, (int)sourceId, atlasCoords, alternativeId);
+            var cellTileData = Layers[tileInstance.Layer].GetCellTileData(coords);
             if (cellTileData == null)
             {
                 GD.PrintErr(
@@ -228,7 +229,7 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
         }
         else
         {
-            var tileMap = (TileMapLayer)Root;
+            var tileMap = Layers[0];
             UpdateTileMap(ldtkJson, options, tileMap);
         }
 
