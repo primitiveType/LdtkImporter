@@ -29,9 +29,9 @@ public partial class TilesetDefinition : IImporter, IJsonOnDeserialized
 
         GD.Print($"  {Identifier}");
 
-        var key = $"{LdtkImporterPlugin.OptionTilesetResources}/{Identifier}";
+        var key = $"{LdtkImporterConstants.OptionTilesetResources}/{Identifier}";
         var tileSetPath = options.GetValueOrDefault<string>(key);
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
 
         if (string.IsNullOrWhiteSpace(tileSetPath))
         {
@@ -70,9 +70,9 @@ public partial class TilesetDefinition : IImporter, IJsonOnDeserialized
 
         GD.Print($"  {Identifier}:{TileSet.ResourcePath}");
 
-        var key = $"{LdtkImporterPlugin.OptionTilesetResources}/{Identifier}";
+        var key = $"{LdtkImporterConstants.OptionTilesetResources}/{Identifier}";
         var tileSetPath = options.GetValueOrDefault<string>(key);
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         var customLayerName = $"{prefix}_{Identifier}";
         var sourceId = TileSet.GetSourceIdByName(customLayerName);
         if (sourceId == -1)
@@ -83,7 +83,7 @@ public partial class TilesetDefinition : IImporter, IJsonOnDeserialized
 
         var customDataLayerIndex = TileSet.GetCustomDataLayerByName(customLayerName);
 
-        if (options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionTilesetAddMeta))
+        if (options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionTilesetAddMeta))
         {
             var meta = Json.ParseString(JsonString);
             TileSet.SetMeta($"{prefix}_tilesetDefinition", meta);
@@ -99,7 +99,7 @@ public partial class TilesetDefinition : IImporter, IJsonOnDeserialized
         }
 
         var importTileCustomData =
-            options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionTilesetImportTileCustomData);
+            options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionTilesetImportTileCustomData);
         if (importTileCustomData)
         {
             foreach (var customMetadata in CustomData)
@@ -155,9 +155,9 @@ public partial class TilesetDefinition : IImporter, IJsonOnDeserialized
 
     public void GenerateTileSet(LdtkJson ldtkJson, Dictionary options)
     {
-        var key = $"{LdtkImporterPlugin.OptionTilesetResources}/{Identifier}";
+        var key = $"{LdtkImporterConstants.OptionTilesetResources}/{Identifier}";
         var tileSetPath = options.GetValueOrDefault<string>(key);
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         var imagePath = ldtkJson.Path.GetBaseDir().PathJoin(RelPath);
         var tileSet = new TileSet();
         var texture2D = ResourceLoader.Load<Texture2D>(imagePath);

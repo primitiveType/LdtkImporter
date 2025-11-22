@@ -19,9 +19,9 @@ public partial class EntityDefinition : IImporter, IJsonOnDeserialized
     {
         GD.Print($"  {Identifier}");
 
-        var key = $"{LdtkImporterPlugin.OptionEntityScenes}/{Identifier}";
+        var key = $"{LdtkImporterConstants.OptionEntityScenes}/{Identifier}";
         var scenePath = options.GetValueOrDefault<string>(key);
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
 
         if (string.IsNullOrWhiteSpace(scenePath))
         {
@@ -65,8 +65,8 @@ public partial class EntityDefinition : IImporter, IJsonOnDeserialized
     {
         GD.Print($"  {Identifier}:{EntityScenePath}");
 
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
-        var addDefinition2Meta = options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionEntityAddDefinition2Meta);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
+        var addDefinition2Meta = options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionEntityAddDefinition2Meta);
         var definitionMeta = Json.ParseString(JsonString);
 
         if (addDefinition2Meta)

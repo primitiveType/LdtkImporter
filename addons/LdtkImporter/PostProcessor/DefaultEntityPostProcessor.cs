@@ -11,7 +11,7 @@ public partial class DefaultEntityPostProcessor : AbstractPostProcessor
 {
     public override Node2D PostProcess(LdtkJson ldtkJson, Dictionary options, Node2D baseNode)
     {
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         var instanceMeta = baseNode.GetMeta($"{prefix}_entityInstance").AsGodotDictionary();
         var definitionMeta = baseNode.GetMeta($"{prefix}_entityDefinition").AsGodotDictionary();
         var renderMode = (RenderMode)definitionMeta["renderMode"].AsInt32();

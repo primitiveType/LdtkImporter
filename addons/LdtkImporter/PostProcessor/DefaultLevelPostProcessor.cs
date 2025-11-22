@@ -11,7 +11,7 @@ public partial class DefaultLevelPostProcessor : AbstractPostProcessor
 {
     public override Node2D PostProcess(LdtkJson ldtkJson, Dictionary options, Node2D baseNode)
     {
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         var instanceMeta = baseNode.GetMeta($"{prefix}_levelInstance");
 
         var iid = instanceMeta.AsGodotDictionary()["iid"].AsString();

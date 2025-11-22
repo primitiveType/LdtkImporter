@@ -37,7 +37,7 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
             return Error.Failed;
         }
 
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
 
         Root = new Node2D();
         Root.Name = $"{prefix}_{Identifier}";
@@ -69,11 +69,11 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
     public Error Import(LdtkJson ldtkJson, string savePath, Dictionary options, Array<string> genFiles)
     {
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         var addLayerDefinition2Meta =
-            options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionLevelAddLayerDefinitionToMeta);
+            options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionLevelAddLayerDefinitionToMeta);
         var addLayerInstance2Meta =
-            options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionLevelAddLayerInstanceToMeta);
+            options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionLevelAddLayerInstanceToMeta);
         var layerDefinition = ldtkJson.Defs.Layers.FirstOrDefault(definition => definition.Uid == LayerDefUid);
 
         if (addLayerDefinition2Meta)
@@ -129,10 +129,10 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
     private Error ImportEntity(LdtkJson ldtkJson, Dictionary options)
     {
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
-        var addDefinition2Meta = options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionEntityAddDefinition2Meta);
-        var addInstance2Meta = options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionEntityAddInstance2Meta);
-        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionEntityPostProcessor);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
+        var addDefinition2Meta = options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionEntityAddDefinition2Meta);
+        var addInstance2Meta = options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionEntityAddInstance2Meta);
+        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionEntityPostProcessor);
 
         var entityCountMap = new System.Collections.Generic.Dictionary<string, int>();
         foreach (var entityInstance in EntityInstances)
@@ -206,17 +206,17 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
     private Error ImportIntGrid(LdtkJson ldtkJson, Dictionary options)
     {
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         var layerDefinition = ldtkJson.Defs.Layers.FirstOrDefault(definition => definition.Uid == LayerDefUid);
         if (TilesetDefUid != null)
         {
             var error = ImportTile(ldtkJson, options);
             if (error != Error.Ok) return error;
 
-            if (!options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionLevelImportIntGrid))
+            if (!options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionLevelImportIntGrid))
             {
                 GD.Print(
-                    $"   {LdtkImporterPlugin.OptionLevelImportIntGrid} is false, skip import IntGrid as child TileMap.");
+                    $"   {LdtkImporterConstants.OptionLevelImportIntGrid} is false, skip import IntGrid as child TileMap.");
                 return Error.Ok;
             }
 
@@ -238,7 +238,7 @@ public partial class LayerInstance : IImporter, IJsonOnDeserialized
 
     private void UpdateTileMap(LdtkJson ldtkJson, Dictionary options, TileMapLayer tileMap)
     {
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         var layerDefinition = ldtkJson.Defs.Layers.FirstOrDefault(definition => definition.Uid == LayerDefUid);
         var gridSize = (int)layerDefinition!.GridSize;
         var intGridValues = layerDefinition.IntGridValues;

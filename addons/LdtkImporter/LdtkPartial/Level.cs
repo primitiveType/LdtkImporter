@@ -22,7 +22,7 @@ public partial class Level : IImporter, IJsonOnDeserialized
     {
         GD.Print($"  {Identifier}");
 
-        var key = $"{LdtkImporterPlugin.OptionLevelScenes}/{Identifier}";
+        var key = $"{LdtkImporterConstants.OptionLevelScenes}/{Identifier}";
         var scenePath = options.GetValueOrDefault<string>(key);
 
         if (string.IsNullOrWhiteSpace(scenePath))
@@ -31,7 +31,7 @@ public partial class Level : IImporter, IJsonOnDeserialized
             return Error.FileNotFound;
         }
 
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
 
         if (!ResourceLoader.Exists(scenePath))
         {
@@ -73,8 +73,8 @@ public partial class Level : IImporter, IJsonOnDeserialized
     {
         GD.Print($"  {Identifier}:{ScenePath}");
 
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
-        var addLevelInstance2Meta = options.GetValueOrDefault<bool>(LdtkImporterPlugin.OptionLevelAddLevelInstanceToMeta);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
+        var addLevelInstance2Meta = options.GetValueOrDefault<bool>(LdtkImporterConstants.OptionLevelAddLevelInstanceToMeta);
         var fieldInstance = Json.ParseString(JsonSerializer.Serialize(FieldInstances));
 
         Root.SetMeta($"{prefix}_fieldInstances", fieldInstance);
@@ -130,7 +130,7 @@ public partial class Level : IImporter, IJsonOnDeserialized
             layerInstance.Root.SetOwnerRecursively(Root);
         }
         
-        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionLevelPostProcessor);
+        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionLevelPostProcessor);
         if (postProcessor.Length != 0)
         {
             var processor = ResourceLoader.Load<AbstractPostProcessor>(postProcessor);

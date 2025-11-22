@@ -56,7 +56,7 @@ public partial class LdtkJson : IImporter
 
     private Error CheckOptionValid(Dictionary options)
     {
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
 
         if (!prefix.IsValidPrefix())
         {
@@ -128,7 +128,7 @@ public partial class LdtkJson : IImporter
     private Error SaveLdkJson(LdtkJson ldtkJson, string savePath, Dictionary options, Array<string> genFiles)
     {
         Node2D root;
-        var worldScenePath = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionWorldWorldScenes);
+        var worldScenePath = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionWorldWorldScenes);
         if (!ResourceLoader.Exists(worldScenePath))
         {
             GD.Print($" world scene:{worldScenePath} is not exist, create it!");
@@ -142,7 +142,7 @@ public partial class LdtkJson : IImporter
             root = ResourceLoader.Load<PackedScene>(worldScenePath).Instantiate<Node2D>();
         }
 
-        var prefix = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionGeneralPrefix);
+        var prefix = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionGeneralPrefix);
         root.RemoveChildByNamePrefix(prefix);
 
         foreach (var level in Levels)
@@ -151,7 +151,7 @@ public partial class LdtkJson : IImporter
             level.Root.Owner = root;
         }
         
-        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterPlugin.OptionWorldPostProcessor);
+        var postProcessor = options.GetValueOrDefault<string>(LdtkImporterConstants.OptionWorldPostProcessor);
         if (postProcessor.Length != 0)
         {
             var processor = ResourceLoader.Load<AbstractPostProcessor>(postProcessor);
@@ -161,7 +161,7 @@ public partial class LdtkJson : IImporter
         var packedScene = new PackedScene();
         packedScene.Pack(root);
 
-        var path = $"{savePath}.{LdtkImporterPlugin.SaveExtension}";
+        var path = $"{savePath}.{LdtkImporterConstants.SaveExtension}";
         ResourceSaver.Save(packedScene, path);
 
         return Error.Ok;
